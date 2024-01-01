@@ -29,6 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh './jenkins/scripts/deliver.sh'
+                sh 'cd target/ && pwd'
                 sh 'sleep 1m'
             }
         }
