@@ -29,7 +29,18 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh './jenkins/scripts/deliver.sh'
-                sh 'cd target/ && pwd'
+                sh 'mv target/my-app-1.0-SNAPSHOT.jar  my-app.jar'
+                sshPublisher(
+                    continueOnError: false,
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "aws-ec2",
+                            transfers: [sshTransfer(sourceFiles: 'my-app.jar')],
+                            verbose: true
+                        )
+                    ]
+                )
                 sh 'sleep 1m'
             }
         }
